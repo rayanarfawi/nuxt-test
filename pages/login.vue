@@ -18,8 +18,13 @@
 export default {
   async asyncData({ req, res }) {
     //* Force SSR Mode
-    if (!process.server) window.location.assign("/login");
+    if (!process.server) {
+      window.location.assign("/login");
+      return;
+    }
+
     const csrf_token = res.getHeader("x-csrf-token");
+    console.log(req.url.csrf_token);
     return { csrf: csrf_token };
   },
   data() {
@@ -34,9 +39,13 @@ export default {
     },
     protectedBack: function() {
       this.$axios
-        .post("http://localhost:4000/api/protected", {
-          data: "Some test data"
-        })
+        .post(
+          "http://localhost:4000/api/protected",
+          {
+            data: "Some test data"
+          },
+          { headers: { "x-csrf-token": this.csrf } }
+        )
         .then(res => console.log(res))
         .catch(err => console.warn(err));
     }

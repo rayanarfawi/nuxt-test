@@ -1,5 +1,8 @@
 export default {
   mode: "universal",
+  env: {
+    session_secret: "somedifficultsecret"
+  },
   /*
    ** Headers of the page
    */
